@@ -6,13 +6,13 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:35 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/10/31 11:08:37 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/10/31 11:58:02 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(char *src)
+int	ft_strlen(const char *src)
 {
 	int i;
 
@@ -76,12 +76,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		result[i++] = s[start++];
 	result[i] = '\0';
 	return (result);
-
-	result = ft_add(result, s, start, len);
-	return (result);
 }
 
-char	*ft_strchr(const char *str, int to_find)
+int	ft_strchr(const char *str, int to_find)
 {
 	size_t		i;
 	char		*result;
@@ -93,40 +90,73 @@ char	*ft_strchr(const char *str, int to_find)
 	while (result[i] != '\0')
 	{
 		if (result[i] == cast && cast != 0)
-			return (result + i);
+			return (i);
 		i++;
 	}
 	if (cast == 0)
-		return (result + i);
-	return (NULL);
+		return (i);
+	return (0);
 }
-
-char *get_line(int fd, char *buff, char *stack)
+char	*ft_strdup(const	char *source)
 {
-	int i;
-	char *new;
-	char *line;
+	size_t	i;
+	char	*dest;
 
-	line = NULL;
+	i = ft_strlen(source);
+	dest = malloc(sizeof(char) * i + 1);
+	if (!dest)
+		return (NULL);
 	i = 0;
-	read(fd, buff, BUFFER_SIZE);
-
+	while (source[i] != '\0')
+	{
+		dest[i] = source[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
+char *get_new_line(int fd, char *stack, char *buff)
+{
+	char *tmp;
+	int i;
 
+	i = 0;
+	while (i == 0)
+	{
+		read(fd, buff, BUFFER_SIZE);
+		if (stack != NULL)
+		{
+			tmp = ft_strdup(stack);
+			free(stack);
+			stack = ft_strjoin(tmp, buff);
+			free(tmp);
+		}
+		else
+			stack = ft_strdup(buff);
+		i = ft_strchr(stack, '\n');
+	}
+	return (stack);
+}
 char	*get_next_line(int fd)
 {
 	char buff[BUFFER_SIZE];
 	static char	*stack = NULL;
 
 	if (stack == NULL)
+		stack = get_new_line(fd, stack, buff);
+	else
 	{
-
+		ft_substr()
 	}
+	printf("%s", stack);
+
+	return (stack);
 }
 
 int	main(void)
 {
 	int fd;
 	fd = open("test.txt", O_RDONLY);
+	get_next_line(fd);
 	get_next_line(fd);
 }
