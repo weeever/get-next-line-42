@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:35 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/03 16:37:37 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:30:10 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,41 +129,41 @@ char *get_new_line(int fd, char **stack, char *buff)
 		seed = ft_strchr(buff, '\n');
 		if (seed != -1)
 		{
-			tmp = ft_substr(buff, 0, seed);
+			tmp = ft_substr(buff, 0, seed + 1);
 			result = ft_strjoin((*stack), tmp);
 			free(tmp);
 			if ((*stack) != NULL)
 			{
 				free((*stack));
-				(*stack) = ft_substr(buff, seed, BUFFER_SIZE - seed);
+				(*stack) = ft_substr(buff, seed + 1, (BUFFER_SIZE - seed - 1));
 			}
 			return (result);
 		}
-		tmp = *stack;
+		tmp = (*stack);
 		*stack = ft_strjoin(*stack, buff);
-
 		if (tmp != NULL)
 			free(tmp);
 	}
 	return(NULL);
 }
+
 char	*get_next_line(int fd)
 {
 	static char *stack = NULL;
-	char buff[BUFFER_SIZE];
+	char buff[BUFFER_SIZE + 1];
 	char *result;
-
+	if (fd <= 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	result = get_new_line(fd, &stack, buff);
 	return (result);
 }
 
-int	main(void)
-{
-	int fd;
-	fd = open("test.txt", O_RDONLY);
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	close(fd);
-}
+// int	main(void)
+// {
+// 	int fd;
+// 	fd = open("test.txt", O_RDONLY);
+// 	printf("%s", get_next_line(fd));
+// 	printf("%s", get_next_line(fd));
+// 	printf("%s", get_next_line(fd));
+// 	close(fd);
+// }
