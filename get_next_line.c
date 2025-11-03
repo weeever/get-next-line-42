@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:35 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/10/31 11:58:02 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/03 12:48:17 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,25 @@ int	ft_strlen(const char *src)
 		i++;
 	return (i);
 }
-
-void	ft_write(char **dest, char *buff)
+char	*ft_strdup(const	char *source)
 {
-	int i;
+	size_t	i;
+	char	*dest;
 
+	if (source == NULL)
+		return(NULL);
+	i = ft_strlen(source);
+	dest = malloc(sizeof(char) * i + 1);
+	if (!dest)
+		return (NULL);
 	i = 0;
-	while (buff[i] != '\0')
+	while (source[i] != '\0')
 	{
-		((*dest)[i]) = buff[i];
+		dest[i] = source[i];
 		i++;
 	}
+	dest[i] = '\0';
+	return (dest);
 }
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -43,6 +51,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	j = 0;
+	if (s1 == NULL)
+	{
+		result = ft_strdup(s2);
+		return (result);
+	}
 	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1);
 	if (!result)
 		return (NULL);
@@ -94,63 +107,50 @@ int	ft_strchr(const char *str, int to_find)
 		i++;
 	}
 	if (cast == 0)
-		return (i);
-	return (0);
+		return (-1);
+	return (-1);
 }
-char	*ft_strdup(const	char *source)
-{
-	size_t	i;
-	char	*dest;
 
-	i = ft_strlen(source);
-	dest = malloc(sizeof(char) * i + 1);
-	if (!dest)
-		return (NULL);
-	i = 0;
-	while (source[i] != '\0')
-	{
-		dest[i] = source[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-char *get_new_line(int fd, char *stack, char *buff)
+char *get_new_line(int fd, char *stack, char *buff, char **result)
 {
-	char *tmp;
 	int i;
+	char *tmp;
+	char *tmp2;
+	int seed;
 
-	i = 0;
-	while (i == 0)
+	i = 1;
+	while (i != 0)
 	{
-		read(fd, buff, BUFFER_SIZE);
-		if (stack != NULL)
+		i = read(fd, buff, BUFFER_SIZE);
+		seed = ft_strchr(buff, '\n');
+		if (seed != -1)
 		{
-			tmp = ft_strdup(stack);
-			free(stack);
-			stack = ft_strjoin(tmp, buff);
+			tmp2 = ft_strdup(stack);
+			tmp = ft_substr(buff, 0, seed);
+			(*result) = ft_strjoin(stack, tmp);
 			free(tmp);
+			return (tmp2);
 		}
-		else
-			stack = ft_strdup(buff);
-		i = ft_strchr(stack, '\n');
+		tmp = ft_strdup(buff);
+		tmp2 = ft_strdup(stack);
+		if (stack != NULL)
+			free(stack);
+		stack = ft_strjoin(tmp2, tmp);
+		free(tmp);
 	}
-	return (stack);
+	return(NULL);
 }
 char	*get_next_line(int fd)
 {
+	static char *stack = NULL;
 	char buff[BUFFER_SIZE];
-	static char	*stack = NULL;
+	char *tmp;
+	char *result;
 
-	if (stack == NULL)
-		stack = get_new_line(fd, stack, buff);
-	else
-	{
-		ft_substr()
-	}
-	printf("%s", stack);
-
-	return (stack);
+	printf("%s\n", stack);
+	stack = get_new_line(fd, stack, buff, &result);
+	printf("%s\n", result);
+	return (result);
 }
 
 int	main(void)
@@ -158,5 +158,5 @@ int	main(void)
 	int fd;
 	fd = open("test.txt", O_RDONLY);
 	get_next_line(fd);
-	get_next_line(fd);
+	close(fd);
 }
