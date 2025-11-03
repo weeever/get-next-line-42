@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:35 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/03 12:48:17 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:37:37 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,32 +111,39 @@ int	ft_strchr(const char *str, int to_find)
 	return (-1);
 }
 
-char *get_new_line(int fd, char *stack, char *buff, char **result)
+char *get_new_line(int fd, char **stack, char *buff)
 {
 	int i;
 	char *tmp;
-	char *tmp2;
+	char *result;
 	int seed;
 
 	i = 1;
-	while (i != 0)
+	result = NULL;
+	while (i > 0)
 	{
 		i = read(fd, buff, BUFFER_SIZE);
+		if (i < 0)
+			return (NULL);
+		buff[i] = '\0';
 		seed = ft_strchr(buff, '\n');
 		if (seed != -1)
 		{
-			tmp2 = ft_strdup(stack);
 			tmp = ft_substr(buff, 0, seed);
-			(*result) = ft_strjoin(stack, tmp);
+			result = ft_strjoin((*stack), tmp);
 			free(tmp);
-			return (tmp2);
+			if ((*stack) != NULL)
+			{
+				free((*stack));
+				(*stack) = ft_substr(buff, seed, BUFFER_SIZE - seed);
+			}
+			return (result);
 		}
-		tmp = ft_strdup(buff);
-		tmp2 = ft_strdup(stack);
-		if (stack != NULL)
-			free(stack);
-		stack = ft_strjoin(tmp2, tmp);
-		free(tmp);
+		tmp = *stack;
+		*stack = ft_strjoin(*stack, buff);
+
+		if (tmp != NULL)
+			free(tmp);
 	}
 	return(NULL);
 }
@@ -144,12 +151,9 @@ char	*get_next_line(int fd)
 {
 	static char *stack = NULL;
 	char buff[BUFFER_SIZE];
-	char *tmp;
 	char *result;
 
-	printf("%s\n", stack);
-	stack = get_new_line(fd, stack, buff, &result);
-	printf("%s\n", result);
+	result = get_new_line(fd, &stack, buff);
 	return (result);
 }
 
@@ -157,6 +161,9 @@ int	main(void)
 {
 	int fd;
 	fd = open("test.txt", O_RDONLY);
-	get_next_line(fd);
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 	close(fd);
 }
