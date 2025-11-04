@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:35 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/03 17:30:10 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/04 08:54:06 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,15 @@ char *get_new_line(int fd, char **stack, char *buff)
 		if (i < 0)
 			return (NULL);
 		buff[i] = '\0';
+		if (i == 0)
+		{
+			if ((*stack) != NULL && ft_strlen((*stack)) > 0)
+			{
+				result = (*stack);
+				(*stack) = NULL;
+				return (result);
+			}
+		}
 		seed = ft_strchr(buff, '\n');
 		if (seed != -1)
 		{
@@ -140,7 +149,7 @@ char *get_new_line(int fd, char **stack, char *buff)
 			return (result);
 		}
 		tmp = (*stack);
-		*stack = ft_strjoin(*stack, buff);
+		(*stack) = ft_strjoin((*stack), buff);
 		if (tmp != NULL)
 			free(tmp);
 	}
@@ -152,18 +161,35 @@ char	*get_next_line(int fd)
 	static char *stack = NULL;
 	char buff[BUFFER_SIZE + 1];
 	char *result;
-	if (fd <= 0 || BUFFER_SIZE <= 0)
+
+	if ( fd < 0 || BUFFER_SIZE <= 0)
+	{
+		if (stack != NULL)
+		{
+			free(stack);
+			stack = NULL;
+		}
 		return (NULL);
+	}
 	result = get_new_line(fd, &stack, buff);
 	return (result);
 }
 
-// int	main(void)
+// int main(void)
 // {
 // 	int fd;
+// 	char *line;
+
 // 	fd = open("test.txt", O_RDONLY);
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
+// 	if (fd == -1)
+// 		return (1);
+
+// 	while ((line = get_next_line(fd)) != NULL)
+// 	{
+// 		printf("Line: %s", line);
+// 		free(line);
+// 	}
+
 // 	close(fd);
+// 	return (0);
 // }
