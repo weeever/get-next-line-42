@@ -6,109 +6,31 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:35 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/04 08:54:06 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:26:05 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(const char *src)
+char *check_stack(char **stack)
 {
-	int i;
+	int seed;
+	char *tmp;
 
-	i = 0;
-	if (src == NULL)
-		return (i);
-	while (src[i] != '\0')
-		i++;
-	return (i);
-}
-char	*ft_strdup(const	char *source)
-{
-	size_t	i;
-	char	*dest;
-
-	if (source == NULL)
-		return(NULL);
-	i = ft_strlen(source);
-	dest = malloc(sizeof(char) * i + 1);
-	if (!dest)
-		return (NULL);
-	i = 0;
-	while (source[i] != '\0')
+	if ((*stack) != NULL)
 	{
-		dest[i] = source[i];
-		i++;
+		tmp = *stack;
+		free(*stack);
+		seed = ft_strchr(tmp, '\n');
+		if (seed != -1)
+		{
+			if ((tmp[seed + 1]) !=  '\0')
+			{
+				*stack = ft_substr(tmp, seed + 1, ft_strlen(tmp + seed + 1));
+			}
+		}
 	}
-	dest[i] = '\0';
-	return (dest);
-}
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	int		i;
-	int		j;
-	char	*result;
-
-	i = 0;
-	j = 0;
-	if (s1 == NULL)
-	{
-		result = ft_strdup(s2);
-		return (result);
-	}
-	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1);
-	if (!result)
-		return (NULL);
-	while (s1[i] != '\0')
-		result[j++] = s1[i++];
-	i = 0;
-	while (s2[i] != '\0')
-		result[j++] = s2[i++];
-	result[j] = '\0';
-	return (result);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*result;
-	size_t	i;
-	size_t	size;
-	size_t	switcher;
-
-	result = 0;
-	i = 0;
-	size = ft_strlen((char *)s + start);
-	if (size <= len)
-		switcher = size;
-	else
-		switcher = len;
-	result = malloc(sizeof(char) * switcher + 1);
-	if (!result)
-		return (NULL);
-	while (i != switcher)
-		result[i++] = s[start++];
-	result[i] = '\0';
-	return (result);
-}
-
-int	ft_strchr(const char *str, int to_find)
-{
-	size_t		i;
-	char		*result;
-	char		cast;
-
-	cast = (char)to_find;
-	result = (char *)str;
-	i = 0;
-	while (result[i] != '\0')
-	{
-		if (result[i] == cast && cast != 0)
-			return (i);
-		i++;
-	}
-	if (cast == 0)
-		return (-1);
-	return (-1);
+	return (NULL);
 }
 
 char *get_new_line(int fd, char **stack, char *buff)
@@ -126,26 +48,20 @@ char *get_new_line(int fd, char **stack, char *buff)
 		if (i < 0)
 			return (NULL);
 		buff[i] = '\0';
-		if (i == 0)
-		{
-			if ((*stack) != NULL && ft_strlen((*stack)) > 0)
-			{
-				result = (*stack);
-				(*stack) = NULL;
-				return (result);
-			}
-		}
 		seed = ft_strchr(buff, '\n');
 		if (seed != -1)
 		{
-			tmp = ft_substr(buff, 0, seed + 1);
+			if (*stack != NULL)
+			{
+				if (tmp != NULL)
+					free(tmp);
+				free(*stack);
+				tmp = (*stack);
+				(*stack) = ft_substr(tmp, seed , ft_strlen(tmp) - seed);
+			}
+			tmp = ft_substr(buff , 0, seed + 1);
 			result = ft_strjoin((*stack), tmp);
 			free(tmp);
-			if ((*stack) != NULL)
-			{
-				free((*stack));
-				(*stack) = ft_substr(buff, seed + 1, (BUFFER_SIZE - seed - 1));
-			}
 			return (result);
 		}
 		tmp = (*stack);
@@ -162,34 +78,22 @@ char	*get_next_line(int fd)
 	char buff[BUFFER_SIZE + 1];
 	char *result;
 
-	if ( fd < 0 || BUFFER_SIZE <= 0)
-	{
-		if (stack != NULL)
-		{
-			free(stack);
-			stack = NULL;
-		}
-		return (NULL);
-	}
 	result = get_new_line(fd, &stack, buff);
 	return (result);
 }
 
-// int main(void)
-// {
-// 	int fd;
-// 	char *line;
+int main(void)
+{
+	int fd;
+	char *line;
 
-// 	fd = open("test.txt", O_RDONLY);
-// 	if (fd == -1)
-// 		return (1);
+	fd = open("test.txt", O_RDONLY);
+	printf("Line: %s\n", get_next_line(fd));
+	printf("Line: %s\n", get_next_line(fd));
+	printf("Line: %s\n", get_next_line(fd));
+	printf("Line: %s\n", get_next_line(fd));
+	printf("Line: %s\n", get_next_line(fd));
+	printf("Line: %s\n", get_next_line(fd));
 
-// 	while ((line = get_next_line(fd)) != NULL)
-// 	{
-// 		printf("Line: %s", line);
-// 		free(line);
-// 	}
-
-// 	close(fd);
-// 	return (0);
-// }
+	close(fd);
+}
