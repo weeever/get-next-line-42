@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 12:58:01 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/05 16:17:13 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/06 10:38:24 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_strlen(const char *src)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (src == NULL)
@@ -23,13 +23,14 @@ int	ft_strlen(const char *src)
 		i++;
 	return (i);
 }
+
 char	*ft_strdup(const	char *source)
 {
 	size_t	i;
 	char	*dest;
 
 	if (source == NULL)
-		return(NULL);
+		return (NULL);
 	i = ft_strlen(source);
 	dest = malloc(sizeof(char) * i + 1);
 	if (!dest)
@@ -43,6 +44,7 @@ char	*ft_strdup(const	char *source)
 	dest[i] = '\0';
 	return (dest);
 }
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
@@ -53,7 +55,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	j = 0;
 	if (s1 == NULL && s2 == NULL)
 		return (NULL);
-	if (s1 == NULL  )
+	if (s1 == NULL )
 	{
 		result = ft_strdup(s2);
 		return (result);

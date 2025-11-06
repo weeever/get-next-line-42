@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    test.txt                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/11/04 12:39:36 by tidebonl          #+#    #+#              #
-#    Updated: 2025/11/04 12:39:38 by tidebonl         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 Tu l'as dit : C'en est fait ; ni fuite ni refuge
 Devant l'assaut prochain et furibond des flots.
 Ils avancent toujours. C'est sur ce mot, Déluge,
