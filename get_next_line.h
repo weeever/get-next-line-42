@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:09:32 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/04 12:16:28 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:45:47 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
+# define BUFFER_SIZE 42
 #endif
 
 # include <fcntl.h>
@@ -22,7 +22,7 @@
 # include <unistd.h>
 # include <stdio.h>
 
-char *check_stack(char **stack);
+char *check_stack(char **stack, char *result);
 char	*get_next_line(int fd);
 int	ft_strlen(const char *src);
 char	*ft_strdup(const	char *source);

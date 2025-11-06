@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 12:58:01 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/04 10:45:21 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/05 16:17:13 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	j = 0;
-	if (s1 == NULL)
+	if (s1 == NULL && s2 == NULL)
+		return (NULL);
+	if (s1 == NULL  )
 	{
 		result = ft_strdup(s2);
 		return (result);
