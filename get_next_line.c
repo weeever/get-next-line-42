@@ -6,7 +6,7 @@
 /*   By: tidebonl <tidebonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:35 by tidebonl          #+#    #+#             */
-/*   Updated: 2025/11/06 10:51:41 by tidebonl         ###   ########.fr       */
+/*   Updated: 2025/11/06 11:04:59 by tidebonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ char	*get_next_line(int fd)
 	char		*buff;
 	char		*result;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
 	{
 		if (stack != NULL)
 			free (stack);
